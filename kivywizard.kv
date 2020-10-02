@@ -1,0 +1,53 @@
+<ScreenManagement>:
+    PaginaInicial:
+    SegundaPagina:
+
+<PaginaInicial>:
+    name: 'paginaInicial'
+    FloatLayout:
+        Image:
+            source: 'imagens/logo.png'
+            size_hint: 0.2,0.5
+            pos_hint: {"top":1,"x":0}
+        Button:
+            id:btn
+            text: 'Steno Share'
+            background_color: 1,0,1,1
+            size_hint: 0.8,0.5
+            font_size: 50
+            pos_hint: {"top":1,"x":0.2}
+
+        Button:
+            text: "Login"
+            size_hint: 0.2,0.2
+            pos_hint: {"top": 0.5}
+            font_size: 30
+
+        TextInput:
+            id: input
+            multiline: False
+            pos_hint: {"top":0.5, "x":0.2}
+            size_hint: 0.8,0.2
+            font_size: (root.width**2 + root.height**2) / 12**4
+
+
+        Button:
+            on_release:
+                app.root.current = 'segundaPagina' if input.text == "GG" else 'paginaInicial'
+                root.manager.transition.direction = "left"
+            text: 'Entrar'
+            size_hint: 1,0.3
+            font_size: 30
+
+
+<SegundaPagina>:
+    name: 'segundaPagina'
+
+    FloatLayout:
+
+        Button:
+            text: 'LogOut'
+            on_release:
+                app.root.current = 'paginaInicial'
+                root.manager.transition.direction = "right"
+            background_color: 0,0,0,1
