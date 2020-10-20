@@ -1,0 +1,32 @@
+<Controller>:
+    label_wid: my_custom_label
+    size_hint_y : 0.85
+    BoxLayout:
+        orientation: 'vertical'
+        size: root.width, root.height
+        Label:
+            id: my_custom_label
+            text: root.label
+            color: 1,0.8,0.4,1
+            text_size: self.width, None
+            size_hint: 1, None
+            height: self.texture_size[1]
+            font_name: '/home/bernard/Documents/IME/2 ano/IPE 2/App/boti/alexandria/AlexandriaFLF-Bold.ttf'
+            font_size: 20
+            #path = ''
+            
+        BoxLayout:
+            size_hint_y: 0.2
+            
+            Button:
+                text: 'Last'
+                on_press: root.last_page()
+                size: 75,50
+                size_hint: None,None
+
+            Button:
+                text: 'Next'
+                on_press: root.next_page()
+                size: 75,50
+                size_hint: None,None
+            
