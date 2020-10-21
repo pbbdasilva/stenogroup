@@ -1,5 +1,7 @@
+
 <Controller>:
     label_wid: my_custom_label
+    pagenum: pagenum
     size_hint_y : 0.85
     BoxLayout:
         orientation: 'vertical'
@@ -11,13 +13,14 @@
             text_size: self.width, None
             size_hint: 1, None
             height: self.texture_size[1]
-            font_name: '/home/bernard/Documents/IME/2 ano/IPE 2/App/boti/alexandria/AlexandriaFLF-Bold.ttf'
+            font_name: 'C:/Users/danie/PycharmProjects/stenoshare/AlexandriaFLF-Bold.ttf'
             font_size: 20
             #path = ''
-            
+
+
         BoxLayout:
             size_hint_y: 0.2
-            
+
             Button:
                 text: 'Last'
                 on_press: root.last_page()
@@ -29,4 +32,19 @@
                 on_press: root.next_page()
                 size: 75,50
                 size_hint: None,None
-            
+
+
+            Button:
+                text: 'Page'
+                on_press: root.page()
+                size: 75,50
+                size_hint: None,None
+
+            TextInput:
+                id: pagenum
+                hint_text: str(root.m + 1)
+                text: str(root.m + 1)
+                multiline:False
+                size: 75,50
+                size_hint: None,None
+
