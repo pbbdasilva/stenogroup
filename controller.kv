@@ -2,49 +2,49 @@
 <Controller>:
     label_wid: my_custom_label
     pagenum: pagenum
-    size_hint_y : 0.85
-    BoxLayout:
-        orientation: 'vertical'
-        size: root.width, root.height
+    
+    FloatLayout:
+
+        
+         
+        
         Label:
             id: my_custom_label
             text: root.label
-            color: 1,0.8,0.4,1
-            text_size: self.width, None
-            size_hint: 1, None
-            height: self.texture_size[1]
-            font_name: 'C:/Users/danie/PycharmProjects/stenoshare/AlexandriaFLF-Bold.ttf'
+            text_size:self.size
+            halign:'justify'
+            valign:'top'
+            pos_hint: {"x":.10,"y":.30}
+            size_hint: (.80,.60)
+            
+        Button:
+            text: 'Last'
+            on_press: root.last_page()
+            pos_hint: {"x":0.2,"y":0.1}
+            size_hint: 0.1,0.1
+            color: 1,0,0,1
             font_size: 20
-            #path = ''
-
-
-        BoxLayout:
-            size_hint_y: 0.2
-
-            Button:
-                text: 'Last'
-                on_press: root.last_page()
-                size: 75,50
-                size_hint: None,None
-
-            Button:
-                text: 'Next'
-                on_press: root.next_page()
-                size: 75,50
-                size_hint: None,None
-
-
-            Button:
-                text: 'Page'
-                on_press: root.page()
-                size: 75,50
-                size_hint: None,None
-
-            TextInput:
-                id: pagenum
-                hint_text: str(root.m + 1)
-                text: str(root.m + 1)
-                multiline:False
-                size: 75,50
-                size_hint: None,None
-
+        Button:
+            text: 'Next'
+            on_press: root.next_page()
+            pos_hint: {"x":0.3,"y":0.1}
+            size_hint: 0.1,0.1
+            color: 1,0,0,1
+            font_size: 20
+        Button:
+            text: 'Page'
+            on_press: root.page()
+            pos_hint: {"x":0.4,"y":0.1}
+            size_hint: 0.1,0.1
+            color: 1,0,0,1
+            font_size: 20
+        TextInput:
+            id: pagenum
+            hint_text: str(root.m + 1)
+            text: str(root.m + 1)
+            multiline:False
+            pos_hint: {"x":0.5,"y":0.1}
+            size_hint: 0.1,0.1
+            font_size: 20
+            
+            

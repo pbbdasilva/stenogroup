@@ -1,13 +1,14 @@
-from kivy.uix.boxlayout import BoxLayout
 from kivy.app import App
+from kivy.uix.widget import Widget
+from kivy.uix.floatlayout import FloatLayout
 
 
-with open('1984.txt', 'r', errors='ignore', encoding='latin-1') as livro:
+with open('1984.txt', 'r', errors='ignore') as livro:
     label = livro.read()
 
 
-class Controller(BoxLayout):
-    cont = 3000
+class Controller(FloatLayout):
+    cont = 3000 
     label = label[0:cont]
 
     m = 0
