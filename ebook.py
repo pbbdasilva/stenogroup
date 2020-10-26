@@ -1,14 +1,15 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.floatlayout import FloatLayout
-
+from kivy.core.window import Window
+Window.clearcolor = (0.9, 0.9, 0.9, 0.5)
 
 with open('1984.txt', 'r', errors='ignore') as livro:
     label = livro.read()
 
 
 class Controller(FloatLayout):
-    cont = 3000 
+    cont = 2120
     label = label[0:cont]
 
     m = 0
