@@ -4,9 +4,17 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
-from kivy.core.window import Window
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import ButtonBehavior
+from kivy.uix.image import Image
 import mysql.connector
-Window.clearcolor = (0.5, 0.1, 0.5, 1)
+from kivy.uix.floatlayout import FloatLayout
+from kivy.core.window import Window
+from kivy.uix.widget import Widget
+import os
+
+main_path = "./imagens"
+
 
 class LoginWindow(Screen):
     email = ObjectProperty(None)
@@ -23,7 +31,7 @@ class LoginWindow(Screen):
         t = 0
         for name in my_cursor:
             if self.email.text == name[0]:
-                MainWindow.current = self.email.text
+                Biblioteca.current = self.email.text
                 self.reset()
                 sm.current = "main"
                 t = 1
@@ -35,17 +43,42 @@ class LoginWindow(Screen):
     def reset(self):
         self.email.text = ""
 
-class MainWindow(Screen):
+
+
+class Biblioteca(Screen):
     n = ObjectProperty(None)
-    created = ObjectProperty(None)
     email = ObjectProperty(None)
     current = ""
+
 
     def logOut(self):
         sm.current = "login"
 
+
+    def VerLivros(self):
+        for root, subFolder, filename in os.walk(main_path):
+            for uniqueFile in filename:
+                texto = "imagens/" + uniqueFile
+                self.ids.box.add_widget(ImageButton(source=texto))
+    def RemoverLivros(self):
+        self.ids.box.clear_widgets()
+
+
+
+class titulo(Label):
+    pass
+
+
+class ImageButton(ButtonBehavior, Image):
+    pass
+
+
+class Texto(Screen):
+    pass
+
 class WindowManager(ScreenManager):
     pass
+
 
 def invalidLogin():
     pop = Popup(title='Invalid Login',
@@ -53,14 +86,17 @@ def invalidLogin():
                   size_hint=(None, None), size=(400, 400))
     pop.open()
 
+
 kv = Builder.load_file("my.kv")
 sm = WindowManager()
 
-screens = [LoginWindow(name="login"), MainWindow(name="main")]
+screens = [LoginWindow(name="login"), Biblioteca(name="main"), Texto(name="tex")]
 for screen in screens:
     sm.add_widget(screen)
 
 sm.current = "login"
+
+
 
 class MyMainApp(App):
     def build(self):
@@ -69,6 +105,3 @@ class MyMainApp(App):
 
 if __name__ == "__main__":
     MyMainApp().run()
-
-
-
