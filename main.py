@@ -1,49 +1,48 @@
 from kivy.app import App
-from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.lang import Builder
 from kivy.properties import ObjectProperty
-from kivy.uix.popup import Popup
-from kivy.uix.label import Label
-from kivy.uix.boxlayout import BoxLayout
+import os
 from kivy.uix.button import ButtonBehavior
 from kivy.uix.image import Image
-import mysql.connector
+from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
-from kivy.core.window import Window
-from kivy.uix.widget import Widget
-import os
+import ftplib
+from kivy.utils import platform
 
-main_path = "./imagens"
 
+if platform == "android":
+    from android.permissions import request_permissions, Permission
+    from android.storage import primary_external_storage_path
+    request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE, Permission.INTERNET])
+    direc = primary_external_storage_path()
+    download_dir_path = os.path.join(direc, 'steno_dir')
+else:
+    download_dir_path = os.path.join('.', 'steno_dir')
+
+
+main_path = os.path.join(download_dir_path, 'imagens')
+
+class WindowManager(ScreenManager):
+    pass
 
 class LoginWindow(Screen):
-    email = ObjectProperty(None)
+    pass
 
-    def loginBtn(self):
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            passwd="gugugustavo9",
-            database="gg",
-        )
-        my_cursor = mydb.cursor()
-        my_cursor.execute("SELECT name FROM users")
-        t = 0
-        for name in my_cursor:
-            if self.email.text == name[0]:
-                Biblioteca.current = self.email.text
-                self.reset()
-                sm.current = "main"
-                t = 1
-                break
+class Menu(Screen):
+    ftp = None
 
-        if t == 0:
-            invalidLogin()
-
-    def reset(self):
-        self.email.text = ""
-
-
+    def ftp_connect(self, button_id):
+        self.ftp = ftplib.FTP(host='192.168.4.1')
+        self.ftp.set_debuglevel(2)
+        self.ftp.login('pi', 'honeyimehome')
+        self.ftp.cwd('/files/livros')
+        os.chdir(download_dir_path)
+        with open('1984.txt', 'wb') as fp:
+            self.ftp.retrbinary('RETR 1984.txt', fp.write)
+        os.chdir(os.path.join(download_dir_path, 'imagens'))
+        with open('1984.jpg', 'wb') as fp:
+            self.ftp.retrbinary('RETR 1984.jpg', fp.write)
 
 class Biblioteca(Screen):
     n = ObjectProperty(None)
@@ -56,17 +55,16 @@ class Biblioteca(Screen):
 
 
     def VerLivros(self):
+
         for root, subFolder, filename in os.walk(main_path):
             for uniqueFile in filename:
                 texto = "imagens/" + uniqueFile
                 self.ids.box.add_widget(ImageButton(source=texto))
+
+
     def RemoverLivros(self):
         self.ids.box.clear_widgets()
 
-
-
-class titulo(Label):
-    pass
 
 
 class ImageButton(ButtonBehavior, Image):
@@ -74,23 +72,45 @@ class ImageButton(ButtonBehavior, Image):
 
 
 class Texto(Screen):
-    pass
+    cont = 2120
+    m = 0
+    label =''
+    try:
+        with open(os.path.join(download_dir_path, "1984.txt"), 'r', errors='ignore') as livro:
+            livro_todo = livro.read()
+        if m == 0:
+            # aqui é a primeira página
+            label = livro_todo[m:cont]
+        def next_page(self):
+            self.m = self.m + 1
+            self.label = self.livro_todo[self.m*self.cont:(self.m+1)*self.cont]
+            self.label_wid.text = self.label
+            self.pagenum.hint_text = str(self.m + 1)
+            self.pagenum.text = str(self.m + 1)
 
-class WindowManager(ScreenManager):
-    pass
+        def last_page(self):
+            self.m = self.m - 1
+            self.label = self.livro_todo[self.m * self.cont:(self.m + 1) * self.cont]
+            self.label_wid.text = self.label
+            self.pagenum.hint_text = str(self.m + 1)
+            self.pagenum.text = str(self.m + 1)
+
+        def page(self):
+            self.m = int(self.pagenum.text) - 1
+            self.label = self.livro_todo[self.m * self.cont:(self.m + 1) * self.cont]
+            self.label_wid.text = self.label
+            self.pagenum.hint_text = str(self.m + 1)
+            self.pagenum.text = str(self.m + 1)
+    except FileNotFoundError:
+        pass
 
 
-def invalidLogin():
-    pop = Popup(title='Invalid Login',
-                  content=Label(text='Usuário Inválido'),
-                  size_hint=(None, None), size=(400, 400))
-    pop.open()
 
 
-kv = Builder.load_file("my.kv")
+kv = Builder.load_file("v4.kv")
 sm = WindowManager()
 
-screens = [LoginWindow(name="login"), Biblioteca(name="main"), Texto(name="tex")]
+screens = [LoginWindow(name="login"), Menu(name="menu"), Biblioteca(name="main"), Texto(name="tex")]
 for screen in screens:
     sm.add_widget(screen)
 
@@ -98,10 +118,11 @@ sm.current = "login"
 
 
 
-class MyMainApp(App):
+class v4(App):
     def build(self):
+        self.icon = 'logo/logo.png'
         return sm
 
 
 if __name__ == "__main__":
-    MyMainApp().run()
+    v4().run()
