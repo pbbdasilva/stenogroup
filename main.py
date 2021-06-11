@@ -74,7 +74,7 @@ class ImageButton(ButtonBehavior, Image):
 class Texto(Screen):
     cont = 2120
     m = 0
-    label =''
+    label = ''
     try:
         with open(os.path.join(download_dir_path, "1984.txt"), 'r', errors='ignore') as livro:
             livro_todo = livro.read()
@@ -83,7 +83,7 @@ class Texto(Screen):
             label = livro_todo[m:cont]
         def next_page(self):
             self.m = self.m + 1
-            self.label = self.livro_todo[self.m*self.cont:(self.m+1)*self.cont]
+            self.label = self.livro_todo[self.m*self.cont:(self.m + 1)*self.cont]
             self.label_wid.text = self.label
             self.pagenum.hint_text = str(self.m + 1)
             self.pagenum.text = str(self.m + 1)
